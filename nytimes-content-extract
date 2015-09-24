@@ -1,0 +1,32 @@
+import re
+import requests
+import urllib
+from bs4 import BeautifulSoup
+result = requests.get("http://www.nytimes.com/2015/08/27/opinion/enough-is-enough.html")
+page = result.content
+soup = BeautifulSoup(page)
+
+def is_post(href):
+	return href and not re.compile("photo").search(href) and not re.compile("#").search(href)
+
+link_array = []
+
+ids = []
+
+content = ""
+
+title_file = open('titles.txt', 'a')
+content_file = open('content.txt','a')
+
+title_file.write((soup.find('h1').getText()).encode('utf-8') + "\n")
+
+for paragraph in soup.find_all("p", class_="story-body-text story-content"):
+	#content += urllib.decode(paragraph.getText()) + "\n"
+	#content += paragraph.getText() + "\n"
+	content_file.write((paragraph.getText()).encode('utf-8') + "\n")
+
+
+title_file.close()
+content_file.close()
+
+
